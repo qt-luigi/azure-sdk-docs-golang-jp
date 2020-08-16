@@ -1,0 +1,1 @@
+# azure-sdk-docs-golang-jp
