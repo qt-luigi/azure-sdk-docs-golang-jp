@@ -55,8 +55,6 @@ Goは、パッケージ内の関連するタイプをグループ化します。
 
 ## バージョン管理
 
-各パッケージを[Goモジュール](https://blog.golang.org/using-go-modules)としてリリースしてください。`dep` や `glide` などの従来の依存関係管理ツールはサポートされていません。
-
 {% include requirement/MUST id="golang-versioning-modules" %} 各パッケージを[Goモジュール](https://blog.golang.org/using-go-modules)としてリリースしてください。`dep` や `glide` などの従来の依存関係管理ツールはサポートされていません。
 
 {% include requirement/MUST id="golang-versioning-semver" %} [semver 2.0](https://semver.org/spec/v2.0.0.html) に準拠したモジュールのバージョンをリリースしてください。
@@ -72,8 +70,6 @@ Goは、パッケージ内の関連するタイプをグループ化します。
 - **ライセンス** - 依存関係のライセンス制限を意識する必要があり、多くの場合、それらを使用するときに適切な属性と通知を提供します。
 - **互換性** - 多くの場合、依存関係を制御せず、元の使用と互換性のない方向に進化することを選択する場合があります。
 - **セキュリティ** - 依存関係でセキュリティの脆弱性が発見された場合、Microsoftが依存関係のコードベースを制御していないと、脆弱性を修正することが困難または時間がかかる可能性があります。
-
-交換型を標準ライブラリーで提供される型に制限します (**例外はありません**) 。
 
 {% include requirement/MUST id="golang-dependencies-exch-types" %} 交換型を標準ライブラリーで提供される型に制限します (**例外はありません**) 。
 
@@ -112,8 +108,6 @@ Goは、パッケージ内の関連するタイプをグループ化します。
 
 APIサーフェスは、利用者がサービスに接続するためにインスタンス化する1つ以上のサービスクライアントと、サポート型のセットで構成されます。
 
-Your API surface consists of one or more service clients that the consumer instantiates to connect to your service, plus a set of supporting types.
-
 {% include requirement/MUST id="golang-client-naming" %} ネームサービスのクライアント型には、`Client` という接尾辞を付けます。
 
 ```go
@@ -131,11 +125,6 @@ type WidgetClient struct {
 {% include requirement/MUST id="golang-client-constructors" %} サービスクライアント型の新しいインスタンスを返す次の形式の2つのコンストラクターを提供してください。
 
 ```go
-// NewWidgetClient creates a new instance of WidgetClient with the specified values.  It uses the default pipeline configuration.
-// endpoint - The URI of the Widget.
-// cred - The credential used to authenticate with the Widget service.
-// options - Optional WidgetClient values.  Pass nil to accept default values.
-
 // NewWidgetClientは、指定された値でWidgetClientの新しいインスタンスを作成します。デフォルトのパイプライン構成を使用します。
 // endpoint - ウィジェットのURI。
 // cred - ウィジェットサービスでの認証に使用される資格。
@@ -184,14 +173,13 @@ func NewWidgetClientFromConnectionString(ctx context.Context, con string, option
 }
 ```
 
-認証を実装する場合、PII (個人を特定できる情報) の漏えいや資格情報の漏えいなどのセキュリティホールに利用者を開放しないでください。資格情報は通常、時間制限付きで発行され、サービス接続が期待どおりに機能し続けるように、定期的に更新する必要があります。クライアントライブラリーが現在のすべてのセキュリティ推奨事項に従っていることを確認し、クライアントライブラリーの独立したセキュリティレビューを検討して、ユーザーに潜在的なセキュリティの問題が発生していないことを確認します。
+認証を実装する場合、PII (個人を特定できる情報) の漏えいや資格情報の漏えいなどのセキュリティホールを利用者に開放しないでください。資格情報は通常、時間制限付きで発行され、サービス接続が期待どおりに機能し続けるように、定期的に更新する必要があります。クライアントライブラリーが現在のすべてのセキュリティ推奨事項に従っていることを確認し、クライアントライブラリーの独立したセキュリティレビューを検討して、ユーザーに潜在的なセキュリティの問題が発生していないことを確認します。
 
 {% include requirement/MUSTNOT id="golang-auth-persistence" %} セキュリティ資格情報を永続化、キャッシュ、または再利用しないでください。セキュリティ資格情報は、セキュリティの懸念と資格情報の更新状況の両方をカバーするために、有効期間が短いと見なされるべきです。
 
-{% include requirement/MUST id="golang-auth-policy-impl" %} サービスが非標準の認証システム (Azure Coreでサポートされていない認証システム) を実装している場合は、適切な認証ポリシーポリシーを提供してください。また、サービスによって提供される代替の認証メカニズムを前提として、リクエストに認証情報を追加できるHTTPパイプラインの認証ポリシーを作成する必要もあります。カスタム認証情報は、`azcore.Credentials` インターフェースを実装する必要があります。
+{% include requirement/MUST id="golang-auth-policy-impl" %} サービスが非標準の認証システム (Azure Coreでサポートされていない認証システム) を実装している場合は、適切な認証ポリシーを提供してください。また、サービスによって提供される代替の認証メカニズムを前提として、リクエストに認証情報を追加できるHTTPパイプラインの認証ポリシーを作成する必要もあります。カスタム認証情報は、`azcore.Credentials` インターフェースを実装する必要があります。
 
-## Service Methods
-サービス方法
+## サービスメソッド
 
 {% include requirement/MUST id="golang-client-crud-verbs" %} CRUD操作には次の用語を使用することをお勧めします:
 
